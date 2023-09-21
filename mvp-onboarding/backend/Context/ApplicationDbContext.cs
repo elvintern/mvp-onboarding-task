@@ -9,6 +9,8 @@ namespace backend.Context
 
         public DbSet<ProductEntity> Products { get; set; }
         public DbSet<CustomerEntity> Customers { get; set; }
+        public DbSet<StoreEntity> Stores { get; set; }
+        public DbSet<SaleEntity> Sales { get; set; }
 
     }
 }

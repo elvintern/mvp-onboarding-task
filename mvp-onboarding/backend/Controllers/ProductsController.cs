@@ -40,7 +40,7 @@ namespace backend.Controllers
 
             return Ok(products);
         }
-
+         
         [HttpGet]
         [Route("{id}")]
         public async Task<ActionResult<ProductEntity>> GetProductById([FromRoute] long id)
