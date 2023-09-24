@@ -8,7 +8,7 @@ function NavBar() {
         <Nav.Link href="/">Home</Nav.Link>
       </Nav.Item>
       <Nav.Item>
-        <Nav.Link href="/">Customers</Nav.Link>
+        <Nav.Link href="/Customers">Customers</Nav.Link>
       </Nav.Item>
       <Nav.Item>
         <Nav.Link href="/">Products</Nav.Link>

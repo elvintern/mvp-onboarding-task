@@ -17,6 +17,18 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// ... other configuration code ...
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowLocalhost3000", policyBuilder =>
+    {
+        policyBuilder.WithOrigins("http://localhost:3000") // Frontend application's URL
+                     .AllowAnyHeader()
+                     .AllowAnyMethod();
+    });
+});
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -29,6 +41,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseCors("AllowLocalhost3000");
 
 app.MapControllers();
 

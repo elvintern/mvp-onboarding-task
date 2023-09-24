@@ -1,6 +1,7 @@
 ﻿using backend.Context;
 using backend.Dtos;
 using backend.Entities;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -34,6 +35,7 @@ namespace backend.Controllers
 
         // Read
         [HttpGet]
+        [EnableCors("AllowLocalhost3000")]
         public async Task<ActionResult<List<ProductEntity>>> GetProducts()
         {
             var products = await _context.Products.OrderByDescending(p => p.Id).ToListAsync();
@@ -43,6 +45,7 @@ namespace backend.Controllers
          
         [HttpGet]
         [Route("{id}")]
+        [EnableCors("AllowLocalhost3000")]
         public async Task<ActionResult<ProductEntity>> GetProductById([FromRoute] long id)
         {
             var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
