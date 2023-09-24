@@ -30,7 +30,7 @@ namespace backend.Controllers
             await _context.Stores.AddAsync(newStore);
             await _context.SaveChangesAsync();
 
-            return Ok("Store Saved Successfully");
+            return Ok(new { message = "Customer Saved Successfully" });
         }
 
         // Read
