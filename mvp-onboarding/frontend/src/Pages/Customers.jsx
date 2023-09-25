@@ -18,19 +18,26 @@ export default function Customers() {
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [activePagination, setActivePagination] = useState(1);
+  const [currentItems, setCurrentItems] = useState([]);
 
   let items = [];
-  for (let number = 1; number <= 5; number++) {
+  for (let number = 1; number < customers.length / 10 + 1; number++) {
     items.push(
       <Pagination.Item
         key={number}
         active={number === activePagination}
-        onClick={() => setActivePagination(number)}
+        onClick={() => clickPagination(number)}
       >
         {number}
       </Pagination.Item>
     );
   }
+
+  const clickPagination = (number) => {
+    setActivePagination(number);
+    setCurrentItems(customers.slice((number - 1) * 10, number * 10));
+    console.log(customers.length);
+  };
 
   useEffect(() => {
     fetchCustomers();
@@ -44,6 +51,7 @@ export default function Customers() {
       }
       const data = await response.json();
       setCustomers(data);
+      setCurrentItems(data.slice(0, 10));
     } catch (error) {
       console.error('Failed to fetch:', error.message);
     }
@@ -78,7 +86,7 @@ export default function Customers() {
             </tr>
           </thead>
           <tbody>
-            {customers?.map((el) => (
+            {currentItems?.map((el) => (
               <tr key={el.id}>
                 <td>{el.name}</td>
                 <td>{el.address}</td>
@@ -122,6 +130,8 @@ export default function Customers() {
         />
 
         <Pagination>{items}</Pagination>
+
+        <p>© 2023 - Elvin Park</p>
       </div>
     )
   );
