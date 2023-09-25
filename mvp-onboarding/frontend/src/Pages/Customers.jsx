@@ -8,6 +8,7 @@ import Table from 'react-bootstrap/Table';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { CRUDAPI } from '../Utilities';
+import Pagination from 'react-bootstrap/Pagination';
 
 export default function Customers() {
   const [customers, setCustomers] = useState([]);
@@ -16,6 +17,20 @@ export default function Customers() {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [activePagination, setActivePagination] = useState(1);
+
+  let items = [];
+  for (let number = 1; number <= 5; number++) {
+    items.push(
+      <Pagination.Item
+        key={number}
+        active={number === activePagination}
+        onClick={() => setActivePagination(number)}
+      >
+        {number}
+      </Pagination.Item>
+    );
+  }
 
   useEffect(() => {
     fetchCustomers();
@@ -105,6 +120,8 @@ export default function Customers() {
           deleteId={deleteId}
           setdeleteId={setdeleteId}
         />
+
+        <Pagination>{items}</Pagination>
       </div>
     )
   );
