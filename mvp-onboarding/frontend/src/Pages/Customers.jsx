@@ -1,141 +1,111 @@
 import React, { useEffect, useState } from 'react';
+import CreateModal from '../Components/CreateModal';
+import UpdateModal from '../Components/UpdateModal';
+import DeleteModal from '../Components/DeleteModal';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Button from 'react-bootstrap/Button';
 import Table from 'react-bootstrap/Table';
-import Modal from 'react-bootstrap/Modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faPenToSquare,
-  faTrash,
-  faCheck,
-} from '@fortawesome/free-solid-svg-icons';
+import { faPenToSquare, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { CRUDAPI } from '../Utilities';
 
 export default function Customers() {
   const [customers, setCustomers] = useState([]);
-  const [show, setShow] = useState(false);
-  const [newCustomer, setNewCustomer] = useState({ name: '', address: '' });
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const [editingCustomer, setEditingCustomer] = useState({});
+  const [deleteId, setdeleteId] = useState(null);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   useEffect(() => {
     fetchCustomers();
   }, []);
 
-  const captureUserInput = (e) => {
-    setNewCustomer((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
-
   async function fetchCustomers() {
-    const response = await fetch('https://localhost:7292/api/Customers');
-    const data = await response.json();
-    setCustomers(data);
+    try {
+      const response = await fetch(CRUDAPI);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const data = await response.json();
+      setCustomers(data);
+    } catch (error) {
+      console.error('Failed to fetch:', error.message);
+    }
   }
 
-  const createCustomer = () => {
-    postData('https://localhost:7292/api/Customers', newCustomer).then(
-      (data) => {
-        console.log(data);
-        fetchCustomers();
-      }
-    );
-    handleClose();
+  const handleEdit = (id) => {
+    setShowUpdateModal(true);
+    const customer = customers.find((el) => el.id === id);
+    setEditingCustomer(customer);
   };
 
-  const postData = async (url = '', data = {}) => {
-    const response = await fetch(url, {
-      method: 'POST',
-      mode: 'cors',
-      cache: 'no-cache',
-      credentials: 'same-origin',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      redirect: 'follow',
-      referrerPolicy: 'no-referrer',
-      body: JSON.stringify(data),
-    });
-
-    if (!response.ok) {
-      throw new Error(`Network response was not ok: ${response.statusText}`);
-    }
-
-    const contentType = response.headers.get('content-type');
-
-    if (contentType && contentType.includes('application/json')) {
-      return await response.json();
-    } else {
-      return await response.text();
-    }
+  const handleDelete = (id) => {
+    console.log(id, 'click');
+    setShowDeleteModal(true);
+    setdeleteId(id);
   };
 
   return (
-    <div>
-      <Button variant="primary" onClick={handleShow}>
-        New Customer
-      </Button>
+    customers && (
+      <div>
+        <Button variant="primary" onClick={() => setShowCreateModal(true)}>
+          New Customer
+        </Button>
 
-      <Table striped bordered hover>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Address</th>
-            <th>Actions</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {customers?.map((el) => (
-            <tr key={el.id}>
-              <td>{el.name}</td>
-              <td>{el.address}</td>
-              <td>
-                <Button variant="warning">
-                  <FontAwesomeIcon icon={faPenToSquare} />
-                  Edit
-                </Button>
-              </td>
-              <td>
-                <Button variant="danger">
-                  <FontAwesomeIcon icon={faTrash} />
-                  Delete
-                </Button>
-              </td>
+        <Table striped bordered hover>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Address</th>
+              <th>Actions</th>
+              <th>Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </Table>
+          </thead>
+          <tbody>
+            {customers?.map((el) => (
+              <tr key={el.id}>
+                <td>{el.name}</td>
+                <td>{el.address}</td>
+                <td>
+                  <Button variant="warning" onClick={() => handleEdit(el.id)}>
+                    <FontAwesomeIcon icon={faPenToSquare} />
+                    Edit
+                  </Button>
+                </td>
+                <td>
+                  <Button variant="danger" onClick={() => handleDelete(el.id)}>
+                    <FontAwesomeIcon icon={faTrash} />
+                    Delete
+                  </Button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
 
-      {/* Modal */}
-      <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Modal heading</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <label htmlFor="name">Name</label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            onChange={captureUserInput}
-          />
-          <label htmlFor="address">Address</label>
-          <input
-            type="text"
-            id="address"
-            name="address"
-            onChange={captureUserInput}
-          />
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Cancel
-          </Button>
-          <Button variant="success" onClick={createCustomer}>
-            Create
-            <FontAwesomeIcon icon={faCheck} />
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    </div>
+        <CreateModal
+          show={showCreateModal}
+          setShow={setShowCreateModal}
+          fetchCustomers={fetchCustomers}
+        />
+
+        <UpdateModal
+          show={showUpdateModal}
+          setShow={setShowUpdateModal}
+          fetchCustomers={fetchCustomers}
+          editingCustomer={editingCustomer}
+          setEditingCustomer={setEditingCustomer}
+        />
+
+        <DeleteModal
+          show={showDeleteModal}
+          setShow={setShowDeleteModal}
+          fetchCustomers={fetchCustomers}
+          deleteId={deleteId}
+          setdeleteId={setdeleteId}
+        />
+      </div>
+    )
   );
 }
