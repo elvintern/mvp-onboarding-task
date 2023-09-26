@@ -1,61 +1,40 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import Modal from 'react-bootstrap/Modal';
-import { sendData, CRUDAPI, PUT } from '../Utilities';
+import { sendData, CRUDAPI, POST } from '../Utilities';
 
-export default function UpdateModal({
-  show,
-  setShow,
-  fetchCustomers,
-  editingCustomer,
-  setEditingCustomer,
-}) {
-  const handleClose = () => {
-    setShow(false);
-    setEditingCustomer({});
-  };
+export default function CreateModal({ show, setShow, fetchRecords }) {
+  const [newCustomer, setNewCustomer] = useState({ name: '', address: '' });
 
+  const handleClose = () => setShow((prev) => ({ ...prev, showCreate: false }));
   const handleClick = () => {
-    sendData(PUT, `${CRUDAPI}/${editingCustomer.id}`, editingCustomer).then(
-      (data) => {
-        console.log(data);
-        fetchCustomers();
-      }
-    );
+    sendData(POST, `${CRUDAPI}/Customers`, newCustomer).then(() => {
+      fetchRecords();
+    });
 
     handleClose();
   };
 
   const captureUserInput = (e) => {
-    setEditingCustomer((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
+    setNewCustomer((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   return (
-    <Modal show={show} onHide={handleClose}>
+    <Modal show={show.showCreate} onHide={handleClose}>
       <Modal.Header closeButton>
-        <Modal.Title>Edit customer</Modal.Title>
+        <Modal.Title>Create customer</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <label htmlFor="name">Name</label>
-        <input
-          type="text"
-          id="name"
-          name="name"
-          onChange={captureUserInput}
-          value={editingCustomer.name || ''}
-        />
+        <input type="text" id="name" name="name" onChange={captureUserInput} />
         <label htmlFor="address">Address</label>
         <input
           type="text"
           id="address"
           name="address"
           onChange={captureUserInput}
-          value={editingCustomer.address || ''}
         />
       </Modal.Body>
       <Modal.Footer>
@@ -63,7 +42,7 @@ export default function UpdateModal({
           Cancel
         </Button>
         <Button variant="success" onClick={handleClick}>
-          Edit
+          Create
           <FontAwesomeIcon icon={faCheck} />
         </Button>
       </Modal.Footer>

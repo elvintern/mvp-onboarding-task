@@ -8,25 +8,24 @@ import { sendData, CRUDAPI, DELETE } from '../Utilities';
 export default function DeleteModal({
   show,
   setShow,
-  fetchCustomers,
+  fetchRecords,
   deleteId,
   setdeleteId,
 }) {
   const handleClose = () => {
-    setShow(false);
+    setShow((prev) => ({ ...prev, showDelete: false }));
     setdeleteId(null);
   };
 
   const handleClick = () => {
-    sendData(DELETE, `${CRUDAPI}/${deleteId}`).then((data) => {
-      console.log(data);
-      fetchCustomers();
+    sendData(DELETE, `${CRUDAPI}/Customers/${deleteId}`).then(() => {
+      fetchRecords();
     });
     handleClose();
   };
 
   return (
-    <Modal show={show} onHide={handleClose}>
+    <Modal show={show.showDelete} onHide={handleClose}>
       <Modal.Header closeButton>
         <Modal.Title>Delete customer</Modal.Title>
       </Modal.Header>

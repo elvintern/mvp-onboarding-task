@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import CreateModal from '../Components/CreateModal';
-import UpdateModal from '../Components/UpdateModal';
-import DeleteModal from '../Components/DeleteModal';
+import CreateModal from './CreateModal';
+import UpdateModal from './UpdateModal';
+import DeleteModal from './DeleteModal';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Button from 'react-bootstrap/Button';
 import Table from 'react-bootstrap/Table';
@@ -11,17 +11,21 @@ import { CRUDAPI } from '../Utilities';
 import Pagination from 'react-bootstrap/Pagination';
 
 export default function Customers() {
-  const [customers, setCustomers] = useState([]);
-  const [editingCustomer, setEditingCustomer] = useState({});
+  const [records, setRecords] = useState([]);
+  const [editingRecord, setEditingRecord] = useState({});
   const [deleteId, setdeleteId] = useState(null);
-  const [showCreateModal, setShowCreateModal] = useState(false);
-  const [showUpdateModal, setShowUpdateModal] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [modalStates, setModalStates] = useState({
+    showCreate: false,
+    showUpdate: false,
+    showDelete: false,
+  });
   const [activePagination, setActivePagination] = useState(1);
   const [currentItems, setCurrentItems] = useState([]);
 
+  const tableName = 'Customers';
+
   let items = [];
-  for (let number = 1; number < customers.length / 10 + 1; number++) {
+  for (let number = 1; number < records.length / 10 + 1; number++) {
     items.push(
       <Pagination.Item
         key={number}
@@ -33,24 +37,29 @@ export default function Customers() {
     );
   }
 
+  const commonProps = {
+    show: modalStates,
+    setShow: setModalStates,
+    fetchRecords: fetchRecords,
+  };
+
   const clickPagination = (number) => {
     setActivePagination(number);
-    setCurrentItems(customers.slice((number - 1) * 10, number * 10));
-    console.log(customers.length);
+    setCurrentItems(records.slice((number - 1) * 10, number * 10));
   };
 
   useEffect(() => {
-    fetchCustomers();
+    fetchRecords(tableName);
   }, []);
 
-  async function fetchCustomers() {
+  async function fetchRecords(tableName) {
     try {
-      const response = await fetch(CRUDAPI);
+      const response = await fetch(CRUDAPI + '/' + tableName);
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
       const data = await response.json();
-      setCustomers(data);
+      setRecords(data);
       setCurrentItems(data.slice(0, 10));
     } catch (error) {
       console.error('Failed to fetch:', error.message);
@@ -58,21 +67,25 @@ export default function Customers() {
   }
 
   const handleEdit = (id) => {
-    setShowUpdateModal(true);
-    const customer = customers.find((el) => el.id === id);
-    setEditingCustomer(customer);
+    setModalStates((prev) => ({ ...prev, showUpdate: true }));
+    const customer = records.find((el) => el.id === id);
+    setEditingRecord(customer);
   };
 
   const handleDelete = (id) => {
-    console.log(id, 'click');
-    setShowDeleteModal(true);
+    setModalStates((prev) => ({ ...prev, showDelete: true }));
     setdeleteId(id);
   };
 
   return (
-    customers && (
+    records && (
       <div>
-        <Button variant="primary" onClick={() => setShowCreateModal(true)}>
+        <Button
+          variant="primary"
+          onClick={() =>
+            setModalStates((prev) => ({ ...prev, showCreate: true }))
+          }
+        >
           New Customer
         </Button>
 
@@ -107,24 +120,16 @@ export default function Customers() {
           </tbody>
         </Table>
 
-        <CreateModal
-          show={showCreateModal}
-          setShow={setShowCreateModal}
-          fetchCustomers={fetchCustomers}
-        />
+        <CreateModal {...commonProps} />
 
         <UpdateModal
-          show={showUpdateModal}
-          setShow={setShowUpdateModal}
-          fetchCustomers={fetchCustomers}
-          editingCustomer={editingCustomer}
-          setEditingCustomer={setEditingCustomer}
+          {...commonProps}
+          editingRecord={editingRecord}
+          setEditingRecord={setEditingRecord}
         />
 
         <DeleteModal
-          show={showDeleteModal}
-          setShow={setShowDeleteModal}
-          fetchCustomers={fetchCustomers}
+          {...commonProps}
           deleteId={deleteId}
           setdeleteId={setdeleteId}
         />

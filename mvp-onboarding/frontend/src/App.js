@@ -1,8 +1,8 @@
 import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Home from './Pages/Home';
+import Home from './Home';
 import Nav from './NavBar';
-import Customers from './Pages/Customers';
+import Customers from './Customers/Customers';
 
 function App() {
   return (
