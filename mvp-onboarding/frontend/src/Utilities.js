@@ -2,6 +2,8 @@ export const CRUDAPI = 'https://localhost:7292/api';
 export const POST = 'POST';
 export const PUT = 'PUT';
 export const DELETE = 'DELETE';
+export const ITEMS_PER_PAGE = 10;
+
 export const sendData = async (method = '', url = '', data = {}) => {
   const response = await fetch(url, {
     method: method,

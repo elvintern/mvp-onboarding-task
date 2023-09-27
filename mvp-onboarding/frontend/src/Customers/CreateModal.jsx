@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
-import Button from 'react-bootstrap/Button';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import Modal from 'react-bootstrap/Modal';
 import { sendData, CRUDAPI, POST } from '../Utilities';
 import '../style.css';
+import GenericModal from './GenericModal';
 
 export default function CreateModal({ show, setShow, fetchRecords }) {
   const [newCustomer, setNewCustomer] = useState({ name: '', address: '' });
@@ -23,10 +21,13 @@ export default function CreateModal({ show, setShow, fetchRecords }) {
   };
 
   return (
-    <Modal show={show.showCreate} onHide={handleClose}>
-      <Modal.Header closeButton>
-        <Modal.Title>Create customer</Modal.Title>
-      </Modal.Header>
+    <GenericModal
+      title="Create customer"
+      show={show.showCreate}
+      handleClose={handleClose}
+      handleSave={handleClick}
+      saveButtonLabel="Create"
+    >
       <Modal.Body>
         <div className="container--input">
           <label htmlFor="name">Name</label>
@@ -47,15 +48,6 @@ export default function CreateModal({ show, setShow, fetchRecords }) {
           />
         </div>
       </Modal.Body>
-      <Modal.Footer>
-        <Button variant="secondary" onClick={handleClose}>
-          Cancel
-        </Button>
-        <Button variant="success" onClick={handleClick}>
-          Create
-          <FontAwesomeIcon className="btn--icon--ml" icon={faCheck} />
-        </Button>
-      </Modal.Footer>
-    </Modal>
+    </GenericModal>
   );
 }
