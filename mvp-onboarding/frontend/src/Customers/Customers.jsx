@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { CRUDAPI } from '../Utilities';
 import Pagination from 'react-bootstrap/Pagination';
+import '../style.css';
 
 export default function Customers() {
   const [records, setRecords] = useState([]);
@@ -52,7 +53,7 @@ export default function Customers() {
     fetchRecords(tableName);
   }, []);
 
-  async function fetchRecords(tableName) {
+  async function fetchRecords() {
     try {
       const response = await fetch(CRUDAPI + '/' + tableName);
       if (!response.ok) {
@@ -75,12 +76,14 @@ export default function Customers() {
   const handleDelete = (id) => {
     setModalStates((prev) => ({ ...prev, showDelete: true }));
     setdeleteId(id);
+    console.log(id);
   };
 
   return (
     records && (
       <div>
         <Button
+          className="btn--create"
           variant="primary"
           onClick={() =>
             setModalStates((prev) => ({ ...prev, showCreate: true }))
@@ -105,13 +108,16 @@ export default function Customers() {
                 <td>{el.address}</td>
                 <td>
                   <Button variant="warning" onClick={() => handleEdit(el.id)}>
-                    <FontAwesomeIcon icon={faPenToSquare} />
+                    <FontAwesomeIcon
+                      className="btn--icon"
+                      icon={faPenToSquare}
+                    />
                     Edit
                   </Button>
                 </td>
                 <td>
                   <Button variant="danger" onClick={() => handleDelete(el.id)}>
-                    <FontAwesomeIcon icon={faTrash} />
+                    <FontAwesomeIcon className="btn--icon" icon={faTrash} />
                     Delete
                   </Button>
                 </td>

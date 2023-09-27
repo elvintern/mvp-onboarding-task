@@ -18,6 +18,7 @@ export default function DeleteModal({
   };
 
   const handleClick = () => {
+    console.log(deleteId);
     sendData(DELETE, `${CRUDAPI}/Customers/${deleteId}`).then(() => {
       fetchRecords();
     });
@@ -30,15 +31,15 @@ export default function DeleteModal({
         <Modal.Title>Delete customer</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <p>Are you sure?</p>
+        <p className="sign--warning">Are you sure?</p>
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={handleClose}>
           Cancel
         </Button>
-        <Button variant="success" onClick={handleClick}>
+        <Button className="btn--delete" variant="success" onClick={handleClick}>
           Delete
-          <FontAwesomeIcon icon={faCheck} />
+          <FontAwesomeIcon className="btn--icon--ml" icon={faCheck} />
         </Button>
       </Modal.Footer>
     </Modal>

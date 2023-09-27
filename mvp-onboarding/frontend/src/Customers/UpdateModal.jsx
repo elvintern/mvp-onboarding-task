@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import Modal from 'react-bootstrap/Modal';
 import { sendData, CRUDAPI, PUT } from '../Utilities';
+import '../style.css';
 
 export default function UpdateModal({
   show,
@@ -42,22 +43,26 @@ export default function UpdateModal({
         <Modal.Title>Edit customer</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <label htmlFor="name">Name</label>
-        <input
-          type="text"
-          id="name"
-          name="name"
-          onChange={captureUserInput}
-          value={editingRecord.name || ''}
-        />
-        <label htmlFor="address">Address</label>
-        <input
-          type="text"
-          id="address"
-          name="address"
-          onChange={captureUserInput}
-          value={editingRecord.address || ''}
-        />
+        <div className="container--input">
+          <label htmlFor="name">Name</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            onChange={captureUserInput}
+            value={editingRecord.name || ''}
+          />
+        </div>
+        <div className="container--input">
+          <label htmlFor="address">Address</label>
+          <input
+            type="text"
+            id="address"
+            name="address"
+            onChange={captureUserInput}
+            value={editingRecord.address || ''}
+          />
+        </div>
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={handleClose}>
@@ -65,7 +70,7 @@ export default function UpdateModal({
         </Button>
         <Button variant="success" onClick={handleClick}>
           Edit
-          <FontAwesomeIcon icon={faCheck} />
+          <FontAwesomeIcon className="btn--icon--ml" icon={faCheck} />
         </Button>
       </Modal.Footer>
     </Modal>
