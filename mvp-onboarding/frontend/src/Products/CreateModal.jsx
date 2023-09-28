@@ -4,12 +4,17 @@ import { sendData, CRUDAPI, POST } from '../Utilities';
 import '../style.css';
 import GenericModal from './GenericModal';
 
-export default function CreateModal({ show, setShow, fetchRecords }) {
-  const [newData, setNewData] = useState({ name: '', address: '' });
+export default function CreateModal({
+  show,
+  setShow,
+  fetchRecords,
+  tableName,
+}) {
+  const [newData, setNewData] = useState({ name: '', price: null });
 
   const handleClose = () => setShow((prev) => ({ ...prev, showCreate: false }));
   const handleClick = () => {
-    sendData(POST, `${CRUDAPI}/Customers`, newData).then(() => {
+    sendData(POST, `${CRUDAPI}/${tableName}`, newData).then(() => {
       fetchRecords();
     });
 
@@ -18,11 +23,12 @@ export default function CreateModal({ show, setShow, fetchRecords }) {
 
   const captureUserInput = (e) => {
     setNewData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    console.log(newData);
   };
 
   return (
     <GenericModal
-      title="Create customer"
+      title="Create product"
       show={show.showCreate}
       handleClose={handleClose}
       handleSave={handleClick}
@@ -39,11 +45,11 @@ export default function CreateModal({ show, setShow, fetchRecords }) {
           />
         </div>
         <div className="container--input">
-          <label htmlFor="address">Address</label>
+          <label htmlFor="price">Price</label>
           <input
             type="text"
-            id="address"
-            name="address"
+            id="price"
+            name="price"
             onChange={captureUserInput}
           />
         </div>

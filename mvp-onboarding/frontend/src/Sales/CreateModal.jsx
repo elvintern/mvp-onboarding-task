@@ -4,12 +4,17 @@ import { sendData, CRUDAPI, POST } from '../Utilities';
 import '../style.css';
 import GenericModal from './GenericModal';
 
-export default function CreateModal({ show, setShow, fetchRecords }) {
-  const [newData, setNewData] = useState({ name: '', address: '' });
+export default function CreateModal({
+  show,
+  setShow,
+  fetchRecords,
+  tableName,
+}) {
+  const [newData, setNewData] = useState({ name: '', price: null });
 
   const handleClose = () => setShow((prev) => ({ ...prev, showCreate: false }));
   const handleClick = () => {
-    sendData(POST, `${CRUDAPI}/Customers`, newData).then(() => {
+    sendData(POST, `${CRUDAPI}/${tableName}`, newData).then(() => {
       fetchRecords();
     });
 
@@ -22,7 +27,7 @@ export default function CreateModal({ show, setShow, fetchRecords }) {
 
   return (
     <GenericModal
-      title="Create customer"
+      title="Create store"
       show={show.showCreate}
       handleClose={handleClose}
       handleSave={handleClick}

@@ -11,13 +11,13 @@ function NavBar() {
         <Nav.Link href="/Customers">Customers</Nav.Link>
       </Nav.Item>
       <Nav.Item>
-        <Nav.Link href="/">Products</Nav.Link>
+        <Nav.Link href="/Products">Products</Nav.Link>
       </Nav.Item>
       <Nav.Item>
-        <Nav.Link href="/">Stores</Nav.Link>
+        <Nav.Link href="/Stores">Stores</Nav.Link>
       </Nav.Item>
       <Nav.Item>
-        <Nav.Link href="/">Sales</Nav.Link>
+        <Nav.Link href="/Sales">Sales</Nav.Link>
       </Nav.Item>
     </Nav>
   );
