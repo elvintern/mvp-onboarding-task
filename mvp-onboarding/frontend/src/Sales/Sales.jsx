@@ -32,6 +32,7 @@ export default function Sales() {
       const data = await response.json();
       setRecords(data);
       setCurrentItems(data.slice(0, ITEMS_PER_PAGE));
+      console.log(data);
     } catch (error) {
       console.error('Failed to fetch:', error.message);
     }
@@ -84,27 +85,31 @@ export default function Sales() {
             </tr>
           </thead>
           <tbody>
-            {currentItems?.map(({ id, name, address }) => (
-              <tr key={id}>
-                <td>{name}</td>
-                <td>{address}</td>
-                <td>
-                  <Button variant="warning" onClick={() => handleEdit(id)}>
-                    <FontAwesomeIcon
-                      className="btn--icon"
-                      icon={faPenToSquare}
-                    />
-                    Edit
-                  </Button>
-                </td>
-                <td>
-                  <Button variant="danger" onClick={() => handleDelete(id)}>
-                    <FontAwesomeIcon className="btn--icon" icon={faTrash} />
-                    Delete
-                  </Button>
-                </td>
-              </tr>
-            ))}
+            {currentItems?.map(
+              ({ id, productName, customerName, storeName, dateSold }) => (
+                <tr key={id}>
+                  <td>{customerName}</td>
+                  <td>{productName}</td>
+                  <td>{storeName}</td>
+                  <td>{dateSold}</td>
+                  <td>
+                    <Button variant="warning" onClick={() => handleEdit(id)}>
+                      <FontAwesomeIcon
+                        className="btn--icon"
+                        icon={faPenToSquare}
+                      />
+                      Edit
+                    </Button>
+                  </td>
+                  <td>
+                    <Button variant="danger" onClick={() => handleDelete(id)}>
+                      <FontAwesomeIcon className="btn--icon" icon={faTrash} />
+                      Delete
+                    </Button>
+                  </td>
+                </tr>
+              )
+            )}
           </tbody>
         </Table>
 

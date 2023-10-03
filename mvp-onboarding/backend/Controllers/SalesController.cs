@@ -38,13 +38,28 @@ namespace backend.Controllers
         // Read
         [HttpGet]
         [EnableCors("AllowLocalhost3000")]
-        public async Task<ActionResult<List<SaleEntity>>> GetSales()
+        public async Task<ActionResult<List<SaleWithDetailsDto>>> GetSales()
         {
-            var Sales = await _context.Sales.OrderByDescending(s => s.Id).ToListAsync();
+            var sales = await _context.Sales
+                .Include(s => s.Product)
+                .Include(s => s.Customer)
+                .Include(s => s.Store)
+                .Select(s => new SaleWithDetailsDto
+                {
+                    Id = s.Id,
+                    DateSold = s.DateSold,
+                    ProductId = s.Product.Id,
+                    ProductName = s.Product.Name,
+                    CustomerId = s.Customer.Id,
+                    CustomerName = s.Customer.Name,
+                    StoreId = s.Store.Id,
+                    StoreName = s.Store.Name,
+                })
+                .ToListAsync();
 
-            return Ok(Sales);
+            return Ok(sales);
         }
-         
+
         [HttpGet]
         [Route("{id}")]
         [EnableCors("AllowLocalhost3000")]

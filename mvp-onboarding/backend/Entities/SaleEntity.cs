@@ -10,5 +10,8 @@ namespace backend.Entities
         public int CustomerId { get; set; }
         public int StoreId { get; set; }
         public DateTime DateSold { get; set; }
+        public ProductEntity Product { get; set; }
+        public CustomerEntity Customer { get; set; }
+        public StoreEntity Store { get; set; }
     }
 }
