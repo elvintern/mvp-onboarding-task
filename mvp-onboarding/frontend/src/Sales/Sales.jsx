@@ -15,7 +15,12 @@ export default function Sales() {
   const tableName = 'Sales';
   const [records, setRecords] = useState([]);
   const [currentItems, setCurrentItems] = useState([]);
-  const [editingRecord, setEditingRecord] = useState(null);
+  const [editingRecord, setEditingRecord] = useState({
+    dateSold: '',
+    customerId: null,
+    productId: null,
+    storeId: null,
+  });
   const [deleteId, setDeleteId] = useState(null);
   const [modalStates, setModalStates] = useState({
     showCreate: false,
@@ -102,7 +107,6 @@ export default function Sales() {
           className="btn--create"
           variant="primary"
           onClick={() => {
-            console.log(otherTables);
             setModalStates((prev) => ({ ...prev, showCreate: true }));
           }}
         >

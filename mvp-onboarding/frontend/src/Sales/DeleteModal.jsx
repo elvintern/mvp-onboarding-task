@@ -24,7 +24,7 @@ export default function DeleteModal({
 
   return (
     <GenericModal
-      title="Delete store"
+      title="Delete sale"
       show={show.showDelete}
       handleClose={handleClose}
       handleSave={handleClick}

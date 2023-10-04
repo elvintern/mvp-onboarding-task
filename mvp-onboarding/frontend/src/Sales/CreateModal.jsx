@@ -20,16 +20,24 @@ export default function CreateModal({
 
   const handleClose = () => setShow((prev) => ({ ...prev, showCreate: false }));
   const handleClick = () => {
-    sendData(POST, `${CRUDAPI}/${tableName}`, newData).then(() => {
-      fetchRecords();
-    });
+    sendData(POST, `${CRUDAPI}/${tableName}`, newData)
+      .then(() => {
+        fetchRecords();
+      })
+      .then(() => {
+        setNewData({
+          dateSold: '',
+          customerId: null,
+          productId: null,
+          storeId: null,
+        });
+      });
 
     handleClose();
   };
 
   const captureUserInput = (e) => {
     setNewData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-    console.log(newData, otherTables);
   };
 
   return (
@@ -53,8 +61,12 @@ export default function CreateModal({
         </div>
         <div className="container--input">
           <label htmlFor="customerId">Customer</label>
-          <select name="customerId" onChange={captureUserInput}>
-            <option defaultValue disabled>
+          <select
+            name="customerId"
+            value={newData.customerId || ''}
+            onChange={captureUserInput}
+          >
+            <option value={''} disabled>
               Select a Customer
             </option>
             {otherTables.customers.map((option) => (
@@ -66,8 +78,12 @@ export default function CreateModal({
         </div>
         <div className="container--input">
           <label htmlFor="productId">Product</label>
-          <select name="productId" onChange={captureUserInput}>
-            <option value="" defaultValue disabled>
+          <select
+            name="productId"
+            value={newData.productId || ''}
+            onChange={captureUserInput}
+          >
+            <option value="" disabled>
               Select a Product
             </option>
             {otherTables.products.map((option) => (
@@ -79,8 +95,12 @@ export default function CreateModal({
         </div>
         <div className="container--input">
           <label htmlFor="storeId">Store</label>
-          <select name="storeId" onChange={captureUserInput}>
-            <option value="" defaultValue disabled>
+          <select
+            name="storeId"
+            value={newData.storeId || ''}
+            onChange={captureUserInput}
+          >
+            <option value="" disabled>
               Select a Store
             </option>
             {otherTables.stores.map((option) => (

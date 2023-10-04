@@ -10,6 +10,7 @@ export default function UpdateModal({
   editingRecord,
   setEditingRecord,
   tableName,
+  otherTables,
 }) {
   const handleClose = () => {
     setShow((prev) => ({ ...prev, showUpdate: false }));
@@ -17,13 +18,18 @@ export default function UpdateModal({
   };
 
   const handleClick = () => {
-    sendData(
-      PUT,
-      `${CRUDAPI}/${tableName}/${editingRecord.id}`,
-      editingRecord
-    ).then(() => {
-      fetchRecords();
-    });
+    sendData(PUT, `${CRUDAPI}/${tableName}/${editingRecord.id}`, editingRecord)
+      .then(() => {
+        fetchRecords();
+      })
+      .then(() => {
+        setEditingRecord({
+          dateSold: '',
+          customerId: null,
+          productId: null,
+          storeId: null,
+        });
+      });
 
     handleClose();
   };
@@ -44,24 +50,66 @@ export default function UpdateModal({
       saveButtonLabel="Edit"
     >
       <div className="container--input">
-        <label htmlFor="name">Name</label>
+        <label htmlFor="dateSold">Date Sold</label>
         <input
           type="text"
-          id="name"
-          name="name"
+          id="dateSold"
+          name="dateSold"
           onChange={captureUserInput}
-          value={editingRecord?.name || ''}
+          placeholder="2023-09-30"
+          value={editingRecord?.dateSold?.slice(0, 10) || ''}
         />
       </div>
       <div className="container--input">
-        <label htmlFor="address">Address</label>
-        <input
-          type="text"
-          id="address"
-          name="address"
+        <label htmlFor="customerId">Customer</label>
+        <select
+          name="customerId"
           onChange={captureUserInput}
-          value={editingRecord?.address || ''}
-        />
+          value={editingRecord?.customerId || ''}
+        >
+          <option defaultValue disabled>
+            Select a Customer
+          </option>
+          {otherTables.customers.map((option) => (
+            <option key={option.name} value={option.id}>
+              {option.name}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div className="container--input">
+        <label htmlFor="productId">Product</label>
+        <select
+          name="productId"
+          onChange={captureUserInput}
+          value={editingRecord?.productId || ''}
+        >
+          <option value="" defaultValue disabled>
+            Select a Product
+          </option>
+          {otherTables.products.map((option) => (
+            <option key={option.name} value={option.id}>
+              {option.name}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div className="container--input">
+        <label htmlFor="storeId">Store</label>
+        <select
+          name="storeId"
+          onChange={captureUserInput}
+          value={editingRecord?.storeId || ''}
+        >
+          <option value="" defaultValue disabled>
+            Select a Store
+          </option>
+          {otherTables.stores.map((option) => (
+            <option key={option.name} value={option.id}>
+              {option.name}
+            </option>
+          ))}
+        </select>
       </div>
     </GenericModal>
   );

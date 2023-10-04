@@ -9,9 +9,13 @@ export default function CreateModal({ show, setShow, fetchRecords }) {
 
   const handleClose = () => setShow((prev) => ({ ...prev, showCreate: false }));
   const handleClick = () => {
-    sendData(POST, `${CRUDAPI}/Customers`, newData).then(() => {
-      fetchRecords();
-    });
+    sendData(POST, `${CRUDAPI}/Customers`, newData)
+      .then(() => {
+        fetchRecords();
+      })
+      .then(() => {
+        setNewData({ name: '', address: null });
+      });
 
     handleClose();
   };

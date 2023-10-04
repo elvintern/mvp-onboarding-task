@@ -14,9 +14,13 @@ export default function CreateModal({
 
   const handleClose = () => setShow((prev) => ({ ...prev, showCreate: false }));
   const handleClick = () => {
-    sendData(POST, `${CRUDAPI}/${tableName}`, newData).then(() => {
-      fetchRecords();
-    });
+    sendData(POST, `${CRUDAPI}/${tableName}`, newData)
+      .then(() => {
+        fetchRecords();
+      })
+      .then(() => {
+        setNewData({ name: '', price: null });
+      });
 
     handleClose();
   };
