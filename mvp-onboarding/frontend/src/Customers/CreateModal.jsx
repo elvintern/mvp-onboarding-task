@@ -4,20 +4,30 @@ import { sendData, CRUDAPI, POST } from '../Utilities';
 import '../style.css';
 import GenericModal from './GenericModal';
 
-export default function CreateModal({ show, setShow, fetchRecords }) {
+export default function CreateModal({
+  show,
+  setShow,
+  fetchRecords,
+  tableName,
+}) {
   const [newData, setNewData] = useState({ name: '', address: '' });
 
   const handleClose = () => setShow((prev) => ({ ...prev, showCreate: false }));
   const handleClick = () => {
-    sendData(POST, `${CRUDAPI}/Customers`, newData)
-      .then(() => {
-        fetchRecords();
-      })
-      .then(() => {
-        setNewData({ name: '', address: null });
-      });
-
-    handleClose();
+    if (newData.name && newData.address) {
+      sendData(POST, `${CRUDAPI}/${tableName}`, newData)
+        .then(() => {
+          fetchRecords();
+        })
+        .then(() => {
+          setNewData({ name: '', address: null });
+        })
+        .then(() => {
+          handleClose();
+        });
+    } else {
+      alert('Check the input values');
+    }
   };
 
   const captureUserInput = (e) => {

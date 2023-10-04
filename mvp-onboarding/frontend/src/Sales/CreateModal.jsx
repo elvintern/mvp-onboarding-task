@@ -20,20 +20,30 @@ export default function CreateModal({
 
   const handleClose = () => setShow((prev) => ({ ...prev, showCreate: false }));
   const handleClick = () => {
-    sendData(POST, `${CRUDAPI}/${tableName}`, newData)
-      .then(() => {
-        fetchRecords();
-      })
-      .then(() => {
-        setNewData({
-          dateSold: '',
-          customerId: null,
-          productId: null,
-          storeId: null,
+    if (
+      newData.dateSold &&
+      newData.customerId &&
+      newData.productId &&
+      newData.storeId
+    ) {
+      sendData(POST, `${CRUDAPI}/${tableName}`, newData)
+        .then(() => {
+          fetchRecords();
+        })
+        .then(() => {
+          setNewData({
+            dateSold: '',
+            customerId: null,
+            productId: null,
+            storeId: null,
+          });
+        })
+        .then(() => {
+          handleClose();
         });
-      });
-
-    handleClose();
+    } else {
+      alert('Check the input values');
+    }
   };
 
   const captureUserInput = (e) => {

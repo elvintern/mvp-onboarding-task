@@ -14,15 +14,20 @@ export default function CreateModal({
 
   const handleClose = () => setShow((prev) => ({ ...prev, showCreate: false }));
   const handleClick = () => {
-    sendData(POST, `${CRUDAPI}/${tableName}`, newData)
-      .then(() => {
-        fetchRecords();
-      })
-      .then(() => {
-        setNewData({ name: '', address: null });
-      });
-
-    handleClose();
+    if (newData.name && newData.address) {
+      sendData(POST, `${CRUDAPI}/${tableName}`, newData)
+        .then(() => {
+          fetchRecords();
+        })
+        .then(() => {
+          setNewData({ name: '', address: null });
+        })
+        .then(() => {
+          handleClose();
+        });
+    } else {
+      alert('Check the input values');
+    }
   };
 
   const captureUserInput = (e) => {

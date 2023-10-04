@@ -52,6 +52,7 @@ export default function Customers() {
     show: modalStates,
     setShow: setModalStates,
     fetchRecords: fetchRecords,
+    tableName: tableName,
   };
 
   useEffect(() => {
