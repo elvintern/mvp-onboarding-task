@@ -10,7 +10,7 @@ export default function CreateModal({
   fetchRecords,
   tableName,
 }) {
-  const [newData, setNewData] = useState({ name: '', price: null });
+  const [newData, setNewData] = useState({ name: '', address: null });
 
   const handleClose = () => setShow((prev) => ({ ...prev, showCreate: false }));
   const handleClick = () => {

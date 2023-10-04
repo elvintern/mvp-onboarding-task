@@ -22,6 +22,11 @@ export default function Sales() {
     showUpdate: false,
     showDelete: false,
   });
+  const [otherTables, setOtherTables] = useState({
+    customers: [],
+    products: [],
+    stores: [],
+  });
 
   const fetchRecords = useCallback(async () => {
     try {
@@ -32,7 +37,34 @@ export default function Sales() {
       const data = await response.json();
       setRecords(data);
       setCurrentItems(data.slice(0, ITEMS_PER_PAGE));
-      console.log(data);
+    } catch (error) {
+      console.error('Failed to fetch:', error.message);
+    }
+  }, []);
+
+  const fetchOtherRecords = useCallback(async () => {
+    try {
+      const customers = await fetch(CRUDAPI + '/Customers');
+      const products = await fetch(CRUDAPI + '/Products');
+      const stores = await fetch(CRUDAPI + '/Stores');
+      if (!customers.ok) {
+        throw new Error(`HTTP error! Status: ${customers.status}`);
+      } else if (!products.ok) {
+        throw new Error(`HTTP error! Status: ${products.status}`);
+      } else if (!stores.ok) {
+        throw new Error(`HTTP error! Status: ${stores.status}`);
+      }
+
+      const dataFromCustomers = await customers.json();
+      const dataFromProducts = await products.json();
+      const dataFromStores = await stores.json();
+
+      setOtherTables((prev) => ({
+        ...prev,
+        customers: dataFromCustomers,
+        products: dataFromProducts,
+        stores: dataFromStores,
+      }));
     } catch (error) {
       console.error('Failed to fetch:', error.message);
     }
@@ -54,11 +86,14 @@ export default function Sales() {
     setShow: setModalStates,
     fetchRecords: fetchRecords,
     tableName: tableName,
+    records: records,
+    otherTables: otherTables,
   };
 
   useEffect(() => {
     fetchRecords();
-  }, [fetchRecords]);
+    fetchOtherRecords();
+  }, [fetchRecords, fetchOtherRecords]);
 
   return (
     records.length > 0 && (
@@ -66,11 +101,12 @@ export default function Sales() {
         <Button
           className="btn--create"
           variant="primary"
-          onClick={() =>
-            setModalStates((prev) => ({ ...prev, showCreate: true }))
-          }
+          onClick={() => {
+            console.log(otherTables);
+            setModalStates((prev) => ({ ...prev, showCreate: true }));
+          }}
         >
-          New Store
+          New Sale
         </Button>
 
         <Table striped bordered hover>
@@ -91,7 +127,7 @@ export default function Sales() {
                   <td>{customerName}</td>
                   <td>{productName}</td>
                   <td>{storeName}</td>
-                  <td>{dateSold}</td>
+                  <td>{dateSold.slice(0, 10)}</td>
                   <td>
                     <Button variant="warning" onClick={() => handleEdit(id)}>
                       <FontAwesomeIcon
