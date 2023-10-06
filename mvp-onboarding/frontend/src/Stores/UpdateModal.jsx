@@ -17,15 +17,21 @@ export default function UpdateModal({
   };
 
   const handleClick = () => {
-    sendData(
-      PUT,
-      `${CRUDAPI}/${tableName}/${editingRecord.id}`,
-      editingRecord
-    ).then(() => {
-      fetchRecords();
-    });
-
-    handleClose();
+    if (editingRecord.name && editingRecord.address) {
+      sendData(
+        PUT,
+        `${CRUDAPI}/${tableName}/${editingRecord.id}`,
+        editingRecord
+      )
+        .then(() => {
+          fetchRecords();
+        })
+        .then(() => {
+          handleClose();
+        });
+    } else {
+      alert('Check the input values');
+    }
   };
 
   const captureUserInput = (e) => {

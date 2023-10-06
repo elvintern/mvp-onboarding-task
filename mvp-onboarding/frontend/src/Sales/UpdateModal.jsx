@@ -18,20 +18,34 @@ export default function UpdateModal({
   };
 
   const handleClick = () => {
-    sendData(PUT, `${CRUDAPI}/${tableName}/${editingRecord.id}`, editingRecord)
-      .then(() => {
-        fetchRecords();
-      })
-      .then(() => {
-        setEditingRecord({
-          dateSold: '',
-          customerId: null,
-          productId: null,
-          storeId: null,
+    if (
+      editingRecord.dateSold &&
+      editingRecord.customerId &&
+      editingRecord.productId &&
+      editingRecord.storeId
+    ) {
+      sendData(
+        PUT,
+        `${CRUDAPI}/${tableName}/${editingRecord.id}`,
+        editingRecord
+      )
+        .then(() => {
+          fetchRecords();
+        })
+        .then(() => {
+          setEditingRecord({
+            dateSold: '',
+            customerId: null,
+            productId: null,
+            storeId: null,
+          });
+        })
+        .then(() => {
+          handleClose();
         });
-      });
-
-    handleClose();
+    } else {
+      alert('Check the input values');
+    }
   };
 
   const captureUserInput = (e) => {
